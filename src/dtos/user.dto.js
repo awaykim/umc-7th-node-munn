@@ -11,14 +11,15 @@ export const bodyToUser = (body) => {
     gender: body.gender,
     birth,
     address: body.address || "",
-    spec_address: body.spec_address || "",
-    phone_num: body.phone_num,
+    specAddress: body.specAddress || "",
+    phoneNum: body.phoneNum,
   };
 };
 
 // 사용자에게 유저 정보를 전달하는 객체 
 export const responseFromUser = ({ user }) => {
   const member = user[0]
+  console.log("user:", member)
     return {
       id: member.id,
       email: member.email,
@@ -29,6 +30,6 @@ export const responseFromUser = ({ user }) => {
         main: member.address,
         detail: member.spec_address,
       },
-      phone_num: member.phone_num,
+      phoneNum: member.phone_num,
     };
   };

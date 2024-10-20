@@ -15,17 +15,17 @@ export const addUser = async (data) => {
     if (confirm[0].isExistEmail) {
       return null;
     }
-
+    console.log(data)
     const [result] = await pool.query(
-      `INSERT INTO member (email, name, gender, birth, address, spec_address, phone_num, status, social_type,  point) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+      `INSERT INTO member (email, name, gender, birth, address, spec_address, phone_num, status, social_type, point) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
       [
         data.email,
         data.name,
         data.gender,
         data.birth,
         data.address,
-        data.spec_address,
-        data.phone_num,
+        data.specAddress,
+        data.phoneNum,
         "active",
         "customer",
         0,

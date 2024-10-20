@@ -15,8 +15,8 @@ export const userSignUp = async (data) => {
     gender: data.gender,
     birth: data.birth,
     address: data.address,
-    spec_address: data.spec_address,
-    phone_num: data.phone_num,
+    specAddress: data.specAddress,
+    phoneNum: data.phoneNum,
     
   });
 
