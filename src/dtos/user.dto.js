@@ -12,12 +12,12 @@ export const bodyToUser = (body) => {
     address: body.address || "",
     specAddress: body.specAddress || "",
     phoneNum: body.phoneNum,
-    
+    preferences: body.preferences,
   };
 };
 
 // 사용자에게 유저 정보를 전달하는 객체 
-export const responseFromUser = ({ user }) => {
+export const responseFromUser = ({ user, preferences }) => {
   const member = user[0]
   console.log("user:", member)
     return {
@@ -31,5 +31,6 @@ export const responseFromUser = ({ user }) => {
         detail: member.spec_address,
       },
       phoneNumber: member.phone_num,
+      preferences: preferences,
     };
   };
