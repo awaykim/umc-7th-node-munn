@@ -5,7 +5,7 @@ import { pool } from "../db.config.js";
 // User 데이터 삽입
 export const addUser = async (data) => {
   const conn = await pool.getConnection();
-
+  const now = new Date();
   try {
     const [confirm] = await pool.query(
       `SELECT EXISTS(SELECT 1 FROM member WHERE email = ?) as isExistEmail;`,
@@ -15,9 +15,9 @@ export const addUser = async (data) => {
     if (confirm[0].isExistEmail) {
       return null;
     }
-    console.log(data)
+    
     const [result] = await pool.query(
-      `INSERT INTO member (email, name, gender, birth, address, spec_address, phone_num, status, social_type, point) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+      `INSERT INTO member (email, name, gender, birth, address, spec_address, phone_num, status, social_type, point, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
       [
         data.email,
         data.name,
@@ -29,6 +29,7 @@ export const addUser = async (data) => {
         "active",
         "customer",
         0,
+        now
       ]
     );
 
@@ -49,7 +50,6 @@ export const getUser = async (userId) => {
   try {
     const [user] = await pool.query(`SELECT * FROM member WHERE id = ?;`, userId);
 
-    console.log(user);
 
     if (user.length == 0) {
       return null;

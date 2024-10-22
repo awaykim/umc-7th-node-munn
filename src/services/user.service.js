@@ -17,9 +17,8 @@ export const userSignUp = async (data) => {
     address: data.address,
     specAddress: data.specAddress,
     phoneNum: data.phoneNum,
-    
   });
-
+  
   // 이미 존재하는 이메일의 경우 addUser되지 않는다. (repo 로직)
   if (joinUserId === null) {
     throw new Error("이미 존재하는 이메일입니다.");
@@ -27,6 +26,7 @@ export const userSignUp = async (data) => {
 
   // joinUserId를 통해 user 가져오기 
   const user = await getUser(joinUserId);
+  
   // user를 통해서 user response 생성, 반환
   return responseFromUser({ user });
 };

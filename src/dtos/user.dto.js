@@ -4,7 +4,6 @@
 // 사용자에게 받은 body를 하나의 Json 객체로 변환 
 export const bodyToUser = (body) => {
   const birth = new Date(body.birth);
-
   return {
     email: body.email,
     name: body.name,
@@ -13,6 +12,7 @@ export const bodyToUser = (body) => {
     address: body.address || "",
     specAddress: body.specAddress || "",
     phoneNum: body.phoneNum,
+    
   };
 };
 
@@ -30,6 +30,6 @@ export const responseFromUser = ({ user }) => {
         main: member.address,
         detail: member.spec_address,
       },
-      phoneNum: member.phone_num,
+      phoneNumber: member.phone_num,
     };
   };
