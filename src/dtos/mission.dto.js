@@ -8,6 +8,13 @@ export const bodyMissionToStore = (body) => {
     };
 };
 
+export const bodyUserMissionOngiong = (body, memberId) => {
+    return {
+        memberId: memberId,
+        missionId: body.missionId,
+    };
+};
+
 export const responseMissionToStore = ({ mission }) => {
     return {
         id: mission.id,
@@ -17,3 +24,12 @@ export const responseMissionToStore = ({ mission }) => {
         missionSpec: mission.mission_spec,
     };
 }
+
+export const responseUserMissionOngiong = (userMission, memberId) => {
+    return {
+        id: userMission.id,
+        memberId: memberId,
+        missionId: userMission.mission_id,
+        status: userMission.status,
+    };
+};
