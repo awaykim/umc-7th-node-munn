@@ -4,7 +4,6 @@ import {
     attachReviewPhoto,
     getReviewImagesByReviewId,
 } from "../repositories/review.repository.js";
-
 import { responseAddReview } from "../dtos/review.dto.js";
 
 export const writeReivew = async (data) => {
@@ -14,6 +13,10 @@ export const writeReivew = async (data) => {
         reviewBody: data.reviewBody,
         rating: data.rating,
     });
+
+    if (joinReviewId === null) {
+        throw new Error("이미 존재하는 가게입니다.");
+    }
     const reviewData = await getReview(joinReviewId);
     const storeId = data.storeId;
     const memberId = data.memberId;
