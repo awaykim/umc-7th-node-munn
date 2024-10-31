@@ -4,7 +4,7 @@ import express from "express";
 import { handleUserSignUp } from "./controllers/user.controller.js";
 import { handleStoreAdd } from "./controllers/store.controller.js";
 import { handleReviewWrite } from "./controllers/review.controller.js";
-import { handleMissionAdd } from "./controllers/mission.controller.js";
+import { handleMissionAdd, handleUserMissionOngiong } from "./controllers/mission.controller.js";
 dotenv.config();
 
 const app = express();
@@ -23,7 +23,8 @@ app.post("/api/v1/users/signup", handleUserSignUp);
 app.post("/api/v1/store/add", handleStoreAdd);
 app.post("/api/v1/store/:store_id/review", handleReviewWrite);
 app.post("/api/v1/store/mission/add", handleMissionAdd);
-// app.post("/api/v1/user_mission/{user_id}/challenge", hanldeUserMissionChallenge)
+app.post("/api/v1/user/:user_id/mission/ongoing", handleUserMissionOngiong);
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
