@@ -7,6 +7,14 @@ const now = new Date();
 export const addReview = async (data) => {
     const conn = await pool.getConnection();
     try {
+        const [confirm] = await pool.query(
+            `SELECT EXISTS(SELECT 1 FROM store WHERE id = ?) as isExistStore;`,
+            [data.storeId]
+        );
+
+        if (!confirm[0].isExistStore) {
+            return null;
+        }
         const [result] = await pool.query(
             `INSERT INTO review (member_id, store_id, body, rating, created_at) VALUES (?, ?, ?, ?, ?);`,
             [data.memberId, data.storeId, data.reviewBody, data.rating, now]
