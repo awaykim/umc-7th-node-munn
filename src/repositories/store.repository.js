@@ -1,97 +1,81 @@
-import { pool } from "../db.config.js";
-
-// Repository를 통해 DB에 접근
-const now = new Date();
+import { prisma } from "../db.config.js";
 
 // Store 데이터 삽입
 export const addStore = async (data) => {
-  const conn = await pool.getConnection();
-  try {
-
-
-    const [result] = await pool.query(
-      `INSERT INTO store (name, address, tel_num, created_at, category_id, region_id, status) VALUES (?, ?, ?, ?, ?, ?, ?);`,
-      [
-        data.name,
-        data.address,
-        data.telNum,
-        now,
-        data.foodCategoryId,
-        data.regionId,
-        "active"
-      ]
-    );
-    return result.insertId;
-  } catch (err) {
-    throw new Error(
-      `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
-    );
-  } finally {
-    conn.release();
-  }
+    try {
+        const createdStore = await prisma.store.create({
+            data: {
+                name: data.name,
+                address: data.address,
+                telNum: data.telNum,
+                createdAt: new Date(), // 현재 시간
+                region: {
+                    connect: { id: data.regionId }, // regionId로 연결
+                },
+                foodCategory: {
+                    connect: { id: data.foodCategoryId }, // foodCategoryId로 연결
+                },
+                status: "active",
+            },
+        });
+        return createdStore.id; // 생성된 store의 id 반환
+    } catch (err) {
+        throw new Error(
+            `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
+        );
+    }
 };
 
-
-export const getStore = async (StoreId) => {
-  const conn = await pool.getConnection();
-
+// 사용자 정보 얻기
+export const getStore = async (storeId) => {
   try {
-    const [store] = await conn.query(
-      `SELECT * FROM store WHERE id = ?;`,
-      [StoreId]
-    );
+    const store = await prisma.store.findUnique({
+      where: { id: storeId },
+      include: { region: true, foodCategory: true },  // region과 foodCategory 포함
+    });
 
-    if (store.length == 0) {
+    if (!store) {
       return null;
     }
-    console.log("getStore: ", store)
+
     return store;
   } catch (err) {
     throw new Error(
       `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
     );
-  } finally {
-    conn.release();
   }
 };
 
 
-export const getRegion = async (StoreId) => {
-  const conn = await pool.getConnection();
-
+// Store의 지역 정보 조회
+export const getRegion = async (storeId) => {
   try {
-    const [region] = await conn.query(
-      `SELECT store.region_id, region.name ` +
-      `FROM store JOIN region ON store.region_id = region.id ` +
-      `WHERE store.id = ?`,
-      [StoreId]
-    );
-    return region;
+    const store = await prisma.store.findUnique({
+      where: { id: storeId },
+      select: { region: true },  // region 정보만 선택
+    });
+
+    return store?.region;
   } catch (err) {
     throw new Error(
       `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
     );
-  } finally {
-    conn.release();
   }
 };
 
-export const getFoodCategory = async (StoreId) => {
-    const conn = await pool.getConnection();
 
-    try {
-        const [foodCategory] = await conn.query(
-            `SELECT store.category_id, fc.name ` +
-                `FROM store JOIN food_category fc on store.category_id = fc.id ` +
-                `WHERE store.id = ?`,
-            [StoreId]
-        );
-        return foodCategory;
-    } catch (err) {
-        throw new Error(
-            `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
-        );
-    } finally {
-        conn.release();
-    }
+// Store의 음식 카테고리 정보 조회
+export const getFoodCategory = async (storeId) => {
+  try {
+    const store = await prisma.store.findUnique({
+      where: { id: storeId },
+      select: { foodCategory: true },  // foodCategory 정보만 선택
+    });
+
+    return store?.foodCategory;
+  } catch (err) {
+    throw new Error(
+      `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
+    );
+  }
 };

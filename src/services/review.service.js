@@ -6,7 +6,7 @@ import {
 } from "../repositories/review.repository.js";
 import { responseAddReview } from "../dtos/review.dto.js";
 
-export const writeReivew = async (data) => {
+export const writeReview = async (data) => {
     const joinReviewId = await addReview({
         memberId: data.memberId,
         storeId: data.storeId,
@@ -17,10 +17,10 @@ export const writeReivew = async (data) => {
     if (joinReviewId === null) {
         throw new Error("이미 존재하는 가게입니다.");
     }
-    const reviewData = await getReview(joinReviewId);
+    const review = await getReview(joinReviewId);
     const storeId = data.storeId;
     const memberId = data.memberId;
-    const review = reviewData[0]
+    
 
     console.log("리뷰: ", review);
     for (const reviewImage of data.reviewImages) {
