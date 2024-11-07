@@ -3,8 +3,9 @@ import {
     getReview,
     attachReviewPhoto,
     getReviewImagesByReviewId,
+    getAllStoreReviews,
 } from "../repositories/review.repository.js";
-import { responseAddReview } from "../dtos/review.dto.js";
+import { responseAddReview, responseFromReviews } from "../dtos/review.dto.js";
 
 export const writeReview = async (data) => {
     const joinReviewId = await addReview({
@@ -31,4 +32,9 @@ export const writeReview = async (data) => {
     console.log("리뷰 이미지: ", reviewImages);
 
     return responseAddReview({ review, storeId, memberId, reviewImages });
+};
+
+export const listStoreReviews = async (storeId, cursor) => {
+    const reviews = await getAllStoreReviews(storeId, cursor);
+    return responseFromReviews(reviews);
 };

@@ -20,3 +20,12 @@ export const responseAddReview = ({ review, storeId, memberId, reviewImages }) =
         reviewImages: reviewImages,
     };
 };
+
+export const responseFromReviews = (reviews) => {
+    return {
+        data: reviews,
+        pagination: {
+            cursor: reviews.length ? reviews[reviews.length - 1].id : null,
+        },
+    };
+};
