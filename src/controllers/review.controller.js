@@ -1,5 +1,5 @@
 import { bodyUserReview } from "../dtos/review.dto.js";
-import { writeReview } from "../services/review.service.js";
+import { writeReview, listStoreReviews } from "../services/review.service.js";
 import { StatusCodes } from "http-status-codes";
 
 export const handleReviewWrite = async (req, res, next) => {
@@ -10,4 +10,12 @@ export const handleReviewWrite = async (req, res, next) => {
     const review = await writeReview(bodyUserReview(req.body, storeId));
 
     res.status(StatusCodes.OK).json({ result: review });
+};
+
+export const handleListStoreReviews = async (req, res, next) => {
+    const reviews = await listStoreReviews(
+        parseInt(req.params.storeId),
+        typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0
+    );
+    res.status(StatusCodes.OK).json({ result: reviews });
 };

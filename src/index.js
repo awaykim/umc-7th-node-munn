@@ -3,12 +3,16 @@ import dotenv from "dotenv";
 import express from "express";
 import { handleUserSignUp } from "./controllers/user.controller.js";
 import { handleStoreAdd } from "./controllers/store.controller.js";
-import { handleReviewWrite } from "./controllers/review.controller.js";
+import { handleReviewWrite, handleListStoreReviews } from "./controllers/review.controller.js";
 import { handleMissionAdd, handleUserMissionOngiong } from "./controllers/mission.controller.js";
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
+
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
 
 app.use(cors()); // cors 방식 허용
 app.use(express.static("public")); // 정적 파일 접근
@@ -24,6 +28,9 @@ app.post("/api/v1/store/add", handleStoreAdd);
 app.post("/api/v1/store/:store_id/review", handleReviewWrite);
 app.post("/api/v1/store/mission/add", handleMissionAdd);
 app.post("/api/v1/user/:user_id/mission/ongoing", handleUserMissionOngiong);
+// app.get("/api/v1/user/:user_id/reviews", handleUserReivew);
+app.get("/api/v1/stores/:storeId/reviews", handleListStoreReviews);
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
