@@ -99,3 +99,20 @@ export const getUserMission = async (userMissionId) => {
         );
     }
 };
+
+export const getAllStoreMissions = async (storeId, cursor) => {
+    const missions = await prisma.mission.findMany({
+        select: {
+            id: true,
+            storeId: true,
+            reward: true,
+            deadline: true,
+            missionSpec: true,
+        },
+        where: { storeId: storeId, id: { gt: cursor } },
+        orderBy: { id: "asc" },
+        take: 5,
+    });
+
+    return missions;
+}; 

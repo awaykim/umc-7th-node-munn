@@ -1,12 +1,14 @@
 import {
     responseMissionToStore,
     responseUserMissionOngiong,
+    responseFromMissions,
 } from "../dtos/mission.dto.js";
 import {
     addMissionToStore,
     getMissionFromStore,
     addUserMissionOngoing,
     getUserMission,
+    getAllStoreMissions,
 } from "../repositories/mission.repository.js";
 
 export const newMission = async (data) => {
@@ -36,4 +38,9 @@ export const newUserMission = async (data) => {
     const memberId = data.memberId;
 
     return responseUserMissionOngiong(userMission, memberId);
+};
+
+export const listStoreMissions = async (storeId, cursor) => {
+    const missions = await getAllStoreMissions(storeId, cursor);
+    return responseFromMissions(missions);
 };

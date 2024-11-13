@@ -33,4 +33,12 @@ export const responseUserMissionOngiong = (userMission, memberId) => {
         status: userMission.status, // mission 상태
     };
 };
- 
+
+export const responseFromMissions = (missions) => {
+    return {
+        data: missions,
+        pagination: {
+            cursor: missions.length ? missions[missions.length - 1].id : null,
+        },
+    };
+}
