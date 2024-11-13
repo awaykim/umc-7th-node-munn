@@ -4,6 +4,7 @@ import {
     attachReviewPhoto,
     getReviewImagesByReviewId,
     getAllStoreReviews,
+    getUserReviews,
 } from "../repositories/review.repository.js";
 import { responseAddReview, responseFromReviews } from "../dtos/review.dto.js";
 
@@ -36,5 +37,10 @@ export const writeReview = async (data) => {
 
 export const listStoreReviews = async (storeId, cursor) => {
     const reviews = await getAllStoreReviews(storeId, cursor);
+    return responseFromReviews(reviews);
+};
+
+export const listUserReviews = async (memberId, cursor) => {
+    const reviews = await getUserReviews(memberId, cursor);
     return responseFromReviews(reviews);
 };

@@ -13,6 +13,8 @@ import {
     handleUserMissionOngiong,
     handleListStoreMissions,
 } from "./controllers/mission.controller.js";
+import { handleMissionAdd, handleUserMissionOngiong, handleListStoreMissions } from "./controllers/mission.controller.js";
+
 dotenv.config();
 
 const app = express();
@@ -36,10 +38,10 @@ app.post("/api/v1/store/add", handleStoreAdd);
 app.post("/api/v1/store/:store_id/review", handleReviewWrite);
 app.post("/api/v1/store/mission/add", handleMissionAdd);
 app.post("/api/v1/user/:user_id/mission/ongoing", handleUserMissionOngiong);
-// app.get("/api/v1/user/:user_id/reviews", handleUserReivew);
 app.get("/api/v1/stores/:storeId/reviews", handleListStoreReviews);
 app.get("/api/v1/user/:userId/reviews", handleUserReivew);
 app.get("/api/v1/user/:storeId/missions", handleListStoreMissions);
+
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
