@@ -12,8 +12,9 @@ import {
     handleMissionAdd,
     handleUserMissionOngiong,
     handleListStoreMissions,
+    hanldeListUserOngoingMissions,
 } from "./controllers/mission.controller.js";
-import { handleMissionAdd, handleUserMissionOngiong, handleListStoreMissions } from "./controllers/mission.controller.js";
+
 
 dotenv.config();
 
@@ -41,6 +42,7 @@ app.post("/api/v1/user/:user_id/mission/ongoing", handleUserMissionOngiong);
 app.get("/api/v1/stores/:storeId/reviews", handleListStoreReviews);
 app.get("/api/v1/user/:userId/reviews", handleUserReivew);
 app.get("/api/v1/user/:storeId/missions", handleListStoreMissions);
+app.get("/api/v1/user/:userId/missions/ongoing", hanldeListUserOngoingMissions);
 
 
 app.listen(port, () => {
