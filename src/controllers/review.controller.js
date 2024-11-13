@@ -23,7 +23,7 @@ export const handleListStoreReviews = async (req, res, next) => {
     );
     res.status(StatusCodes.OK).json({ result: reviews });
 };
- 
+
 export const handleUserReivew = async (req, res, next) => {
     const reviews = await listUserReviews(
         parseInt(req.params.userId),

@@ -112,13 +112,21 @@ export const getUserReviews = async (memberId, cursor) => {
             id: true,
             body: true,
             rating: true,
+            createdAt: true,
             store: true,
             member: true,
+            reviewImages: {
+                select: {
+                    imageUrl: true, 
+                },
+            },
         },
         where: { memberId: memberId, id: { gt: cursor } },
         orderBy: { id: "asc" },
         take: 5,
     });
+
+    
 
     return reviews;
 }; 
