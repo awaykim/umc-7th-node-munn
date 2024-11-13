@@ -3,7 +3,11 @@ import {
     bodyMissionToStore,
     bodyUserMissionOngiong,
 } from "../dtos/mission.dto.js";
-import { newMission, newUserMission } from "../services/mission.service.js";
+import {
+    newMission,
+    newUserMission,
+    listStoreMissions,
+} from "../services/mission.service.js";
 
 // 가게에 미션을 추가하는 컨트롤러
 export const handleMissionAdd = async (req, res, next) => {
@@ -43,3 +47,11 @@ export const handleUserMissionOngiong = async (req, res, next) => {
         next(error);
     }
 };
+
+export const handleListStoreMissions = async (req, res, next) => {
+    const missions = await listStoreMissions(
+        parseInt(req.params.storeId), 
+        typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0
+    );
+    res.status(StatusCodes.OK).json({ result: missions });
+}
