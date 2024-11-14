@@ -13,7 +13,7 @@ import {
 
 // 가게에 미션을 추가하는 컨트롤러
 export const handleMissionAdd = async (req, res, next) => {
-    try {
+    
         console.log("가게에 미션을 추가합니다.");
         console.log("body : ", req.body);
 
@@ -22,17 +22,13 @@ export const handleMissionAdd = async (req, res, next) => {
         const mission = await newMission(missionData);
 
         // 성공적으로 생성된 미션을 응답으로 반환
-        res.status(StatusCodes.CREATED).json({ result: mission });
-    } catch (error) {
-        // 오류 발생 시, next()로 에러 핸들링 미들웨어로 전달
-        console.error("미션 추가 실패: ", error);
-        next(error);
-    }
+        res.status(StatusCodes.OK).success(mission);
+    
 };
 
 // 사용자의 진행 중인 미션에 추가하는 컨트롤러
 export const handleUserMissionOngiong = async (req, res, next) => {
-    try {
+    
         const memberId = parseInt(req.params.user_id);
         console.log("사용자 : ", memberId, "의 진행 중인 미션에 추가합니다.");
         console.log("body : ", req.body);
@@ -42,12 +38,9 @@ export const handleUserMissionOngiong = async (req, res, next) => {
         const userMission = await newUserMission(userMissionData);
 
         // 성공적으로 미션에 추가된 사용자 정보를 응답으로 반환
-        res.status(StatusCodes.CREATED).json({ result: userMission });
-    } catch (error) {
-        // 오류 발생 시, next()로 에러 핸들링 미들웨어로 전달
-        console.error("사용자 미션 추가 실패: ", error);
-        next(error);
-    }
+    // res.status(StatusCodes.CREATED).json({ result: userMission });
+    res.status(StatusCodes.OK).success(userMission);
+    
 };
 
 export const handleListStoreMissions = async (req, res, next) => {
@@ -55,7 +48,8 @@ export const handleListStoreMissions = async (req, res, next) => {
         parseInt(req.params.storeId), 
         typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0
     );
-    res.status(StatusCodes.OK).json({ result: missions });
+    // res.status(StatusCodes.OK).json({ result: missions });
+    res.status(StatusCodes.OK).success(missions);
 }
 
 export const hanldeListUserOngoingMissions = async (req, res, next) => {
@@ -63,7 +57,8 @@ export const hanldeListUserOngoingMissions = async (req, res, next) => {
         parseInt(req.params.userId),
         typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0
     );
-    res.status(StatusCodes.OK).json({ result: ongoingMissions });
+    // res.status(StatusCodes.OK).json({ result: ongoingMissions });
+    res.status(StatusCodes.OK).success(ongoingMissions);
 }; 
 
 export const handleCompleteOngoingMission = async (req, res, next) => {
@@ -71,8 +66,8 @@ export const handleCompleteOngoingMission = async (req, res, next) => {
     const missionData = bodyUserMissionOngiong(req.body, memberId);
     const completedMission = await CompleteOngoingMission(missionData);
 
-    res.status(StatusCodes.CREATED).json({ result: completedMission });
-
+    // res.status(StatusCodes.CREATED).json({ result: completedMission });
+    res.status(StatusCodes.OK).success(completedMission);
 
 }; 
 

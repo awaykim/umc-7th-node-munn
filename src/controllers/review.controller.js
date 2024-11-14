@@ -13,7 +13,8 @@ export const handleReviewWrite = async (req, res, next) => {
 
     const review = await writeReview(bodyUserReview(req.body, storeId));
 
-    res.status(StatusCodes.OK).json({ result: review });
+    // res.status(StatusCodes.OK).json({ result: review });
+    res.status(StatusCodes.OK).success(review);
 };
 
 export const handleListStoreReviews = async (req, res, next) => {
@@ -21,7 +22,7 @@ export const handleListStoreReviews = async (req, res, next) => {
         parseInt(req.params.storeId),
         typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0
     );
-    res.status(StatusCodes.OK).json({ result: reviews });
+    res.status(StatusCodes.OK).success(reviews);
 };
 
 export const handleUserReivew = async (req, res, next) => {
@@ -29,5 +30,5 @@ export const handleUserReivew = async (req, res, next) => {
         parseInt(req.params.userId),
         typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0
     );
-    res.status(StatusCodes.OK).json({ result: reviews });
+    res.status(StatusCodes.OK).success(reviews);
 };
