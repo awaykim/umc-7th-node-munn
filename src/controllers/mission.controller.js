@@ -72,5 +72,7 @@ export const handleCompleteOngoingMission = async (req, res, next) => {
     const completedMission = await CompleteOngoingMission(missionData);
 
     res.status(StatusCodes.CREATED).json({ result: completedMission });
-}
+
+
+}; 
 

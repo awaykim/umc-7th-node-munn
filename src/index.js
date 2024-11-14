@@ -48,5 +48,6 @@ app.patch("/api/v1/user/:userId/missions/complete", handleCompleteOngoingMission
 
 
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+    console.log(`Example app listening on port ${port}`);
+});
+

@@ -35,7 +35,6 @@ export const newUserMission = async (data) => {
         throw new Error("이미 진행 중인 미션입니다.");
     }
     const userMission = await getUserMission(joinUserMissionId);
-
     const memberId = data.memberId;
 
     return responseUserMissionOngiong(userMission, memberId);
@@ -49,6 +48,7 @@ export const listStoreMissions = async (storeId, cursor) => {
 export const listUserOngoingMissions = async (memberId, cursor) => {
     const ongoingMissions = await getAllUserOngoinhMissions(memberId, cursor);
     return responseFromMissions(ongoingMissions);
+
 }
 
 export const CompleteOngoingMission = async (data) => {
