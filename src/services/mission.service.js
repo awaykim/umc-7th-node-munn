@@ -9,6 +9,7 @@ import {
     addUserMissionOngoing,
     getUserMission,
     getAllStoreMissions,
+    getAllUserOngoinhMissions,
 } from "../repositories/mission.repository.js";
 
 export const newMission = async (data) => {
@@ -44,3 +45,8 @@ export const listStoreMissions = async (storeId, cursor) => {
     const missions = await getAllStoreMissions(storeId, cursor);
     return responseFromMissions(missions);
 };
+
+export const listUserOngoingMissions = async (memberId, cursor) => {
+    const ongoingMissions = await getAllUserOngoinhMissions(memberId, cursor);
+    return responseFromMissions(ongoingMissions);
+}

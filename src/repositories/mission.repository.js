@@ -116,3 +116,25 @@ export const getAllStoreMissions = async (storeId, cursor) => {
 
     return missions;
 }; 
+
+export const getAllUserOngoinhMissions = async (memberId, cursor) => {
+    const missions = await prisma.memberMission.findMany({
+        select: {
+            id: true,
+            mission: {
+        select: {
+                id: true,
+                storeId: true,
+                reward: true,
+                deadline: true,
+                missionSpec: true,
+            },
+        },    
+        },
+        where: { memberId: memberId, id: { gt: cursor },  status: "ongoing"},
+        orderBy: { id: "asc" },
+        take: 5,
+    });
+
+    return missions;
+};
