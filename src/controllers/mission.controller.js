@@ -8,6 +8,7 @@ import {
     newUserMission,
     listStoreMissions,
     listUserOngoingMissions,
+    CompleteOngoingMission,
 } from "../services/mission.service.js";
 
 // 가게에 미션을 추가하는 컨트롤러
@@ -64,3 +65,14 @@ export const hanldeListUserOngoingMissions = async (req, res, next) => {
     );
     res.status(StatusCodes.OK).json({ result: ongoingMissions });
 }; 
+
+export const handleCompleteOngoingMission = async (req, res, next) => {
+    const memberId = parseInt(req.params.userId);
+    const missionData = bodyUserMissionOngiong(req.body, memberId);
+    const completedMission = await CompleteOngoingMission(missionData);
+
+    res.status(StatusCodes.CREATED).json({ result: completedMission });
+
+
+}; 
+

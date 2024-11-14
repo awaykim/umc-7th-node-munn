@@ -115,26 +115,59 @@ export const getAllStoreMissions = async (storeId, cursor) => {
     });
 
     return missions;
-}; 
+};
+
 
 export const getAllUserOngoinhMissions = async (memberId, cursor) => {
     const missions = await prisma.memberMission.findMany({
         select: {
             id: true,
             mission: {
-        select: {
-                id: true,
-                storeId: true,
-                reward: true,
-                deadline: true,
-                missionSpec: true,
+                select: {
+                    id: true,
+                    storeId: true,
+                    reward: true,
+                    deadline: true,
+                    missionSpec: true,
+                },
             },
-        },    
         },
-        where: { memberId: memberId, id: { gt: cursor },  status: "ongoing"},
+        where: { memberId: memberId, id: { gt: cursor }, status: "ongoing" },
         orderBy: { id: "asc" },
         take: 5,
     });
 
     return missions;
+};
+
+export const updateOngoingToComplete = async (data) => {
+    try {
+        const ongoingMission = await prisma.memberMission.findFirst({
+            where: {
+                status: "ongoing",
+                memberId: data.memberId,
+                missionId: data.missionId,
+            },
+        });
+
+        if (!ongoingMission) {
+            return null;
+        }
+
+        const updatedMission = await prisma.memberMission.update({
+            where: {
+                id: ongoingMission.id,
+            },
+            data: {
+                status: "complete",
+            },
+        });
+
+        return ongoingMission.id;
+
+    } catch (err) {
+        throw new Error(
+            `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
+        );
+    }
 };

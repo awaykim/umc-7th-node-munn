@@ -13,6 +13,7 @@ import {
     handleUserMissionOngiong,
     handleListStoreMissions,
     hanldeListUserOngoingMissions,
+    handleCompleteOngoingMission,
 } from "./controllers/mission.controller.js";
 
 
@@ -43,8 +44,10 @@ app.get("/api/v1/stores/:storeId/reviews", handleListStoreReviews);
 app.get("/api/v1/user/:userId/reviews", handleUserReivew);
 app.get("/api/v1/user/:storeId/missions", handleListStoreMissions);
 app.get("/api/v1/user/:userId/missions/ongoing", hanldeListUserOngoingMissions);
+app.patch("/api/v1/user/:userId/missions/complete", handleCompleteOngoingMission);
 
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
 });
+

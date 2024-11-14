@@ -10,6 +10,7 @@ import {
     getUserMission,
     getAllStoreMissions,
     getAllUserOngoinhMissions,
+    updateOngoingToComplete,
 } from "../repositories/mission.repository.js";
 
 export const newMission = async (data) => {
@@ -34,8 +35,6 @@ export const newUserMission = async (data) => {
         throw new Error("이미 진행 중인 미션입니다.");
     }
     const userMission = await getUserMission(joinUserMissionId);
-
-    
     const memberId = data.memberId;
 
     return responseUserMissionOngiong(userMission, memberId);
@@ -49,4 +48,21 @@ export const listStoreMissions = async (storeId, cursor) => {
 export const listUserOngoingMissions = async (memberId, cursor) => {
     const ongoingMissions = await getAllUserOngoinhMissions(memberId, cursor);
     return responseFromMissions(ongoingMissions);
+
+}
+
+export const CompleteOngoingMission = async (data) => {
+    const userMissionId = await updateOngoingToComplete({
+        memberId: data.memberId,
+        missionId: data.missionId,
+    });
+    if (userMissionId == null) {
+        throw new Error("진행 중인 미션이 아닙니다.");
+    }
+
+    const userMission = await getUserMission(userMissionId);
+
+    const memberId = data.memberId;
+
+    return responseUserMissionOngiong(userMission, memberId);
 }
