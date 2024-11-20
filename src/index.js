@@ -16,25 +16,38 @@ import {
     handleCompleteOngoingMission,
 } from "./controllers/mission.controller.js";
 
-
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
 
-app.get("/", (req, res) => {
-    res.send("Hello World!");
+app.use((req, res, next) => {
+    res.success = (success) => {
+        return res.json({ resultType: "SUCCESS", error: null, success });
+    };
+
+    res.error = ({ errorCode = "unknown", reason = null, data = null }) => {
+        return res.json({
+            resultType: "FAIL",
+            error: { errorCode, reason, data },
+            success: null,
+        });
+    };
+
+    next();
 });
 
-app.use(cors()); // cors 방식 허용
+app.use(cors()); // CORS 설정
 app.use(express.static("public")); // 정적 파일 접근
-app.use(express.json()); // request의 본문을 json으로 해석할 수 있도록 함 (JSON 형태의 요청 body를 파싱하기 위함)
-app.use(express.urlencoded({ extended: false })); // 단순 객체 문자열 형태로 본문 데이터 해석
+app.use(express.json()); // JSON 본문 파싱
+app.use(express.urlencoded({ extended: false })); // URL-encoded 본문 파싱
 
+// 기본 응답
 app.get("/", (req, res) => {
     res.send("서버 시작됨");
 });
 
+// API 엔드포인트 설정
 app.post("/api/v1/users/signup", handleUserSignUp);
 app.post("/api/v1/store/add", handleStoreAdd);
 app.post("/api/v1/store/:store_id/review", handleReviewWrite);
@@ -44,10 +57,24 @@ app.get("/api/v1/stores/:storeId/reviews", handleListStoreReviews);
 app.get("/api/v1/user/:userId/reviews", handleUserReivew);
 app.get("/api/v1/user/:storeId/missions", handleListStoreMissions);
 app.get("/api/v1/user/:userId/missions/ongoing", hanldeListUserOngoingMissions);
-app.patch("/api/v1/user/:userId/missions/complete", handleCompleteOngoingMission);
+app.patch(
+    "/api/v1/user/:userId/missions/complete",
+    handleCompleteOngoingMission
+);
 
+// 전역 오류 처리 미들웨어
+app.use((err, req, res, next) => {
+    if (res.headersSent) {
+        return next(err);
+    }
+
+    res.status(err.statusCode || 500).error({
+        errorCode: err.errorCode || "unknown",
+        reason: err.reason || err.message || null,
+        data: null,
+    });
+});
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
 });
-

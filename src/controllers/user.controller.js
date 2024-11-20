@@ -2,14 +2,22 @@ import { StatusCodes } from "http-status-codes";
 import { bodyToUser } from "../dtos/user.dto.js";
 import { userSignUp } from "../services/user.service.js";
 
-// 클라이언트의 요청을 받아 서비스에 전달
-
 export const handleUserSignUp = async (req, res, next) => {
-  console.log("회원가입을 요청했습니다!");
-  console.log("body:", req.body); // 값이 잘 들어오나 확인하기 위한 테스트용
+    console.log("회원가입을 요청했습니다!");
+    console.log("body:", req.body); // 값이 잘 들어오나 확인하기 위한 테스트용
 
-  // dto로 전달 객체로 바꾼 data를 통해 userSignup 기능 호출하여 user 생성 -> Service
-  const user = await userSignUp(bodyToUser(req.body));
-  // 클라이언트에게 상태 코드와 함께 JSON 형식으로 사용자 정보를 포함한 res 보냄 
-  res.status(StatusCodes.OK).json({ result: user });
+    try {
+        // DTO로 전달 객체로 변환 후 userSignUp 기능 호출
+        const user = await userSignUp(bodyToUser(req.body));
+
+        // 성공 시 JSON 응답을 전송
+        res.status(StatusCodes.OK).success(user);
+    } catch (err) {
+        // 오류 발생 시 오류 정보를 담아 next()로 전달
+        next({
+            errorCode: err.errorCode || "user_signup_failed",
+            reason: err.message || "User signup failed",
+            data: err.data || null,
+        });
+    }
 };
