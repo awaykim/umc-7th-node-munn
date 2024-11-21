@@ -16,12 +16,9 @@ export const responseAddStore = ({ store, region, foodCategory }) => {
     const foodCategoryData = foodCategory; // 단일 객체
 
     return {
-        id: storeData.id,
         name: storeData.name,
         address: storeData.address,
-        telNum: storeData.telNum, // Prisma 모델에서의 필드명
-        status: storeData.status,
-        region: regionData, // 지역 데이터
-        foodCategory: foodCategoryData, // 음식 카테고리 데이터
+        region: regionData, 
+        foodCategory: foodCategoryData, 
     };
 };

@@ -87,7 +87,8 @@ export const getReviewImagesByReviewId = async (reviewId) => {
             },
         });
 
-        return reviewImages; // 리뷰 이미지 목록 반환
+        // imageUrl 값만 추출한 배열 생성
+        return reviewImages.map((image) => image.imageUrl);
     } catch (err) {
         throw new Error(
             `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`

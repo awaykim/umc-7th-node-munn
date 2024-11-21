@@ -30,7 +30,6 @@ export const writeReview = async (data) => {
     }
 
     const reviewImages = await getReviewImagesByReviewId(review.id);
-    console.log("리뷰 이미지: ", reviewImages);
 
     return responseAddReview({ review, storeId, memberId, reviewImages });
 };

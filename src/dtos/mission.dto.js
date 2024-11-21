@@ -17,7 +17,6 @@ export const bodyUserMissionOngiong = (body, memberId) => {
 
 export const responseMissionToStore = ({ mission }) => {
     return {
-        id: mission.id,
         storeId: mission.storeId,
         reward: mission.reward,
         deadline: mission.deadline,
