@@ -5,6 +5,7 @@ const now = new Date();
 
 // User 데이터 삽입
 export const addUser = async (data) => {
+    console.log("repo data:", data);
     const user = await prisma.member.findFirst({
         where: { email: data.email },
     });
@@ -48,4 +49,12 @@ export const getUserPreferencesByUserId = async (memberId) => {
     });
 
     return preferences;
+};
+
+export const findUserByEmail = async (email) => {
+    const user = await prisma.member.findFirst({
+        where: { email: email }, 
+    });
+
+    return user; 
 };

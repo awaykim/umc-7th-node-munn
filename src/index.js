@@ -3,8 +3,11 @@ import dotenv from "dotenv";
 import express from "express";
 import swaggerAutogen from "swagger-autogen";
 import swaggerUiExpress from "swagger-ui-express";
-
-import { handleUserSignUp } from "./controllers/user.controller.js";
+import protectedRouter from "./routes/protected.js";
+import {
+    handleUserSignUp,
+    handleUserLogin,
+} from "./controllers/user.controller.js";
 import { handleStoreAdd } from "./controllers/store.controller.js";
 import {
     handleReviewWrite,
@@ -45,6 +48,8 @@ app.use(express.static("public")); // 정적 파일 접근
 app.use(express.json()); // JSON 본문 파싱
 app.use(express.urlencoded({ extended: false })); // URL-encoded 본문 파싱
 
+app.use("/api", protectedRouter);
+
 // 기본 응답
 app.get("/", (req, res) => {
     res.send("서버 시작됨");
@@ -64,7 +69,7 @@ app.patch(
     "/api/v1/user/:userId/missions/complete",
     handleCompleteOngoingMission
 );
-
+app.post("/api/v1/login", handleUserLogin);
 // 전역 오류 처리 미들웨어
 app.use((err, req, res, next) => {
     if (res.headersSent) {

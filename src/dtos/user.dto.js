@@ -1,8 +1,11 @@
-// 입력 데이터를 정형화된 형태로 파싱, 검증
+import { hashPassword } from "../services/auth.service.js";
 
-// 사용자에게 받은 body를 하나의 Json 객체로 변환
-export const bodyToUser = (body) => {
+export const bodyToUser = async (body) => {
     const birth = new Date(body.birth);
+
+    // 비밀번호 해싱 처리
+    const hashedPassword = await hashPassword(body.password);
+    
     return {
         email: body.email,
         name: body.name,
@@ -12,6 +15,7 @@ export const bodyToUser = (body) => {
         specAddress: body.specAddress || "",
         phoneNum: body.phoneNum,
         preferences: body.preferences,
+        password: hashedPassword,
     };
 };
 
@@ -25,5 +29,12 @@ export const responseFromUser = ({ user, preferences }) => {
         email: user.email,
         name: user.name,
         preferCategory: preferFoods,
+    };
+};
+
+export const bodyToLogin = (body) => {
+    return {
+        email: body.email,
+        password: body.password,
     };
 };

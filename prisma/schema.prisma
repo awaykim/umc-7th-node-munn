@@ -20,6 +20,7 @@ model Member {
   socialType    String?  @default("customer") @map("social_type")
   point         Int?    @default(0)        
   createdAt     DateTime? @default(now()) @map("created_at") 
+  password      String?  @db.VarChar(255)
 
   reviews           Review[]
   memberMissions MemberMission[]
