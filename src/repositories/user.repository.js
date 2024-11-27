@@ -53,8 +53,28 @@ export const getUserPreferencesByUserId = async (memberId) => {
 
 export const findUserByEmail = async (email) => {
     const user = await prisma.member.findFirst({
-        where: { email: email }, 
+        where: { email: email },
     });
 
-    return user; 
+    return user;
+};
+
+export const completeSignup = async (data) => {
+    console.log("repo data: ", data);
+
+    const { email, name, gender, birth, address, specAddress, phoneNum } = data;
+
+    const updatedUser = await prisma.member.update({
+        where: { email: email },
+        data: {
+            name: name,
+            gender: gender,
+            birth: birth,
+            address: address,
+            specAddress: specAddress,
+            phoneNum: phoneNum,
+        },
+    });
+    console.log(updatedUser);
+    return updatedUser.id;
 };

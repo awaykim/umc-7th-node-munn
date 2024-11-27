@@ -4,9 +4,16 @@ import express from "express";
 import swaggerAutogen from "swagger-autogen";
 import swaggerUiExpress from "swagger-ui-express";
 import protectedRouter from "./routes/protected.js";
+import { PrismaSessionStore } from "@quixo3/prisma-session-store";
+import session from "express-session";
+import passport from "passport";
+import { googleStrategy } from "./auth.config.js";
+import { prisma } from "./db.config.js";
+
 import {
     handleUserSignUp,
     handleUserLogin,
+    handleSocialSignUp,
 } from "./controllers/user.controller.js";
 import { handleStoreAdd } from "./controllers/store.controller.js";
 import {
@@ -23,6 +30,10 @@ import {
 } from "./controllers/mission.controller.js";
 
 dotenv.config();
+
+passport.use(googleStrategy);
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user));
 
 const app = express();
 const port = process.env.PORT;
@@ -48,11 +59,35 @@ app.use(express.static("public")); // 정적 파일 접근
 app.use(express.json()); // JSON 본문 파싱
 app.use(express.urlencoded({ extended: false })); // URL-encoded 본문 파싱
 
+app.use(
+    session({
+        cookie: {
+            maxAge: 7 * 24 * 60 * 60 * 1000, // ms
+        },
+        resave: false,
+        saveUninitialized: false,
+        secret: process.env.EXPRESS_SESSION_SECRET,
+        store: new PrismaSessionStore(prisma, {
+            checkPeriod: 2 * 60 * 1000, // ms
+            dbRecordIdIsSessionId: true,
+            dbRecordIdFunction: undefined,
+        }),
+    })
+);
+
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+
 app.use("/api", protectedRouter);
 
 // 기본 응답
 app.get("/", (req, res) => {
-    res.send("서버 시작됨");
+    // #swagger.ignore = true
+    console.log(req.user);
+    res.send("Hello World!");
 });
 
 // API 엔드포인트 설정
@@ -70,7 +105,8 @@ app.patch(
     handleCompleteOngoingMission
 );
 app.post("/api/v1/login", handleUserLogin);
-// 전역 오류 처리 미들웨어
+app.post("/complete-signup", handleSocialSignUp);
+
 app.use((err, req, res, next) => {
     if (res.headersSent) {
         return next(err);
@@ -97,6 +133,17 @@ app.use(
         }
     )
 );
+
+app.get("/oauth2/login/google", passport.authenticate("google"));
+app.get(
+    "/oauth2/callback/google",
+    passport.authenticate("google", {
+        failureRedirect: "/oauth2/login/google",
+        failureMessage: true,
+    }),
+    (req, res) => res.redirect("/complete-signup")
+);
+
 
 app.get("/openapi.json", async (req, res, next) => {
     // #swagger.ignore = true

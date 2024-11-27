@@ -6,6 +6,7 @@ import {
     getUserPreferencesByUserId,
     setPreference,
     findUserByEmail,
+    completeSignup,
 } from "../repositories/user.repository.js";
 
 import { comparePassword } from "../services/auth.service.js";
@@ -27,7 +28,6 @@ export const userSignUp = async (data) => {
         password: data.password,
     });
 
-    
     if (joinUserId === null) {
         throw new DuplicateUserEmailError("이미 존재하는 이메일입니다.", data);
     }
@@ -57,4 +57,26 @@ export const validateUserLogin = async (data) => {
     }
 
     return user;
+};
+
+export const updateUserProfile = async (data) => {
+    console.log("?")
+    const joinUserId = await completeSignup({
+        email: data.email,
+        gender: data.gender,
+        birth: data.birth,
+        address: data.address,
+        specAddress: data.specAddress,
+        phoneNum: data.phoneNum,
+    });
+
+
+    for (const preference of data.preferences) {
+        await setPreference(joinUserId, preference);
+    }
+
+    const user = await getUser(joinUserId);
+    const preferences = await getUserPreferencesByUserId(joinUserId);
+
+    return responseFromUser({ user, preferences });
 };

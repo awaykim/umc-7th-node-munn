@@ -19,6 +19,18 @@ export const bodyToUser = async (body) => {
     };
 };
 
+export const bodySocialSignUp = (body) => {
+    const birth = new Date(body.birth);
+    return {
+        gender: body.gender,
+        birth,
+        address: body.address || "",
+        specAddress: body.specAddress || "",
+        phoneNum: body.phoneNum,
+        preferences: body.preferences,
+    };
+};
+
 // 사용자에게 유저 정보를 전달하는 객체
 export const responseFromUser = ({ user, preferences }) => {
     const preferFoods = preferences.map(
